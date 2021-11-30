@@ -8,4 +8,4 @@ INPUT:
 
 
 OUTPUT:
-  Conversia sumei dintr-o moneda in alta.
+  - Conversia sumei dintr-o moneda in alta.
