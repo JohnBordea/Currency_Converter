@@ -5,5 +5,7 @@ Creati o aplicatie care va avea o interfata grafica si va avea functia de conver
 
 INPUT:
   - Suma de bani, moneda intrare, moneda iesire
+
+
 OUTPUT:
   Conversia sumei dintr-o moneda in alta.
