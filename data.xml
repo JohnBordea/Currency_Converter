@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<DataSet xmlns="http://www.bnr.ro/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bnr.ro/xsd nbrfxrates.xsd">
+
+	<Header>
+
+		<Publisher>National Bank of Romania</Publisher>
+
+		<PublishingDate>2021-12-26</PublishingDate>
+
+		<MessageType>DR</MessageType>
+
+	</Header>
+
+	<Body>
+
+		<Subject>Reference rates</Subject>
+
+		<OrigCurrency>RON</OrigCurrency>
+
+		<Cube date="2021-12-24">
+
+			<Rate currency="AED">1.1885</Rate>
+
+			<Rate currency="AUD">3.1607</Rate>
+
+			<Rate currency="BGN">2.5304</Rate>
+
+			<Rate currency="BRL">0.7692</Rate>
+
+			<Rate currency="CAD">3.4128</Rate>
+
+			<Rate currency="CHF">4.7589</Rate>
+
+			<Rate currency="CNY">0.6855</Rate>
+
+			<Rate currency="CZK">0.1978</Rate>
+
+			<Rate currency="DKK">0.6656</Rate>
+
+			<Rate currency="EGP">0.2779</Rate>
+
+			<Rate currency="EUR">4.9490</Rate>
+
+			<Rate currency="GBP">5.8513</Rate>
+
+			<Rate currency="HRK">0.6588</Rate>
+
+			<Rate currency="HUF" multiplier="100">1.3359</Rate>
+
+			<Rate currency="INR">0.0582</Rate>
+
+			<Rate currency="JPY" multiplier="100">3.8171</Rate>
+
+			<Rate currency="KRW" multiplier="100">0.3679</Rate>
+
+			<Rate currency="MDL">0.2453</Rate>
+
+			<Rate currency="MXN">0.2116</Rate>
+
+			<Rate currency="NOK">0.4942</Rate>
+
+			<Rate currency="NZD">2.9785</Rate>
+
+			<Rate currency="PLN">1.0692</Rate>
+
+			<Rate currency="RSD">0.0421</Rate>
+
+			<Rate currency="RUB">0.0595</Rate>
+
+			<Rate currency="SEK">0.4805</Rate>
+
+			<Rate currency="THB">0.1307</Rate>
+
+			<Rate currency="TRY">0.3653</Rate>
+
+			<Rate currency="UAH">0.1603</Rate>
+
+			<Rate currency="USD">4.3655</Rate>
+
+			<Rate currency="XAU">253.2841</Rate>
+
+			<Rate currency="XDR">6.1115</Rate>
+
+			<Rate currency="ZAR">0.2811</Rate>
+
+		</Cube>
+
+	</Body>
+
+</DataSet>
