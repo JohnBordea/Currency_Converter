@@ -56,7 +56,13 @@ class Converter:
         if not self.from_currency == str and not self.to_currency == index:
             self.to_currency = index
 
-    def __str__(self):
+    def exchange(self, amount_of_money: float, reverse=False) -> float:
+        if not reverse:
+            return round( (self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency]) * amount_of_money , 4)
+        else:
+            return round( (self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency]) * amount_of_money , 4)
+
+    def __str__(self) -> str:
         st = '{\n'
 
         for rate in self.exchange_rate:
