@@ -20,14 +20,14 @@ class Converter:
                     currency.append( ( rate.attrib['currency'], float(rate.text) ) )
 
             self.exchange_rate = dict(currency)
-            self.save_for_offline_use()
+            self.save_exchange_rate()
         except (requests.ConnectionError, requests.Timeout) as exception:
-            self.read_in_case_of_offline()
+            self.read_offline_exchange_rate()
 
         self.from_currency = list(self.exchange_rate.keys())[0]
         self.to_currency = list(self.exchange_rate.keys())[1]
 
-    def save_for_offline_use(self):
+    def save_exchange_rate(self):
         w = open("data/exchange_rate.info", "w")
 
         for rate in self.exchange_rate:
@@ -37,7 +37,7 @@ class Converter:
 
         w.close()
 
-    def read_in_case_of_offline(self):
+    def read_offline_exchange_rate(self):
         f = open('data/exchange_rate.info', 'r')
         currency = []
         for text in f:
