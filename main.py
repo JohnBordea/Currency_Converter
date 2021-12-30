@@ -1,5 +1,5 @@
-from tools.currency_manager import Converter
+from tools.visual_manager import Window
 
-conv = Converter()
+window = Window()
 
-print(conv.exchange(10))
+window.show_window()
