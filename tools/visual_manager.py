@@ -19,8 +19,12 @@ class Window:
         self.master.geometry("800x600")
         self.master.title("BRD Exchange")
         self.converter = Converter()
+
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
+
+        self.components.append( tkr.Label(self.master, text = "") )
+        self.components.append( tkr.Label(self.master, text = "") )
 
         self.components[0].insert(1.0, self.converter.value_from)
         self.components[1].insert(1.0, self.converter.value_to)
@@ -30,7 +34,7 @@ class Window:
             return 15
         return 12
 
-    def text_edit(self, event, index_from, index_to):
+    def text_edit(self, event, index_from, reverse=False):
         if event.keysym.lower() == 'escape':
             self.converter.value_from = 0
             self.converter.value_to = 0
@@ -44,13 +48,13 @@ class Window:
         if self.changed_widget == True:
             if event.char in self.can_be_typed:
                 self.converter.value_from = int(event.char)
-                self.converter.exchange()
+                self.converter.exchange(reverse)
                 if (self.converter.value_to * 100) % 100 == 0:
                     self.converter.value_to = int(self.converter.value_to)
                 self.changed_widget = False
             elif event.char == '.':
                 self.converter.value_from = 0.0
-                self.converter.exchange()
+                self.converter.exchange(reverse)
                 self.changed_widget = False
             elif event.keysym.lower() == 'backspace':
                 self.converter.value_from = 0
@@ -59,25 +63,25 @@ class Window:
             if len( self.components[index_from].get(1.0,tkr.END) ) > self.text_widget_possible_length( self.components[index_from].get(1.0,tkr.END) ) or self.numbers_after_dot == 2:
                 if event.char == '.':
                     self.converter.value_from = float(self.converter.value_from)
-                    self.converter.exchange()
+                    self.converter.exchange(reverse)
                     if (self.converter.value_to * 100) % 100 == 0:
                         self.converter.value_to = int(self.converter.value_to)
                 elif event.keysym.lower() == 'backspace':
                     if '.' in self.components[index_from].get(1.0,tkr.END):
                         if self.numbers_after_dot == 0:
                             self.converter.value_from = int(self.converter.value_from)
-                            self.converter.exchange()
+                            self.converter.exchange(reverse)
                             if (self.converter.value_to * 100) % 100 == 0:
                                 self.converter.value_to = int(self.converter.value_to)
                         else:
                             self.numbers_after_dot = self.numbers_after_dot - 1
                             self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
-                            self.converter.exchange()
+                            self.converter.exchange(reverse)
                             if (self.converter.value_to * 100) % 100 == 0:
                                 self.converter.value_to = int(self.converter.value_to)
                     else:
                         self.converter.value_from = int((self.converter.value_from) / 10)
-                        self.converter.exchange()
+                        self.converter.exchange(reverse)
                         if (self.converter.value_to * 100) % 100 == 0:
                             self.converter.value_to = int(self.converter.value_to)
 
@@ -85,18 +89,18 @@ class Window:
                 if '.' in self.components[index_from].get(1.0,tkr.END) and self.numbers_after_dot < 2:
                     self.numbers_after_dot = self.numbers_after_dot + 1
                     self.converter.value_from = round(self.converter.value_from + (int(event.char) / (10 ** self.numbers_after_dot)) , 2)
-                    self.converter.exchange()
+                    self.converter.exchange(reverse)
                     if (self.converter.value_to * 100) % 100 == 0:
                         self.converter.value_to = int(self.converter.value_to)
                 else:
                     self.converter.value_from = self.converter.value_from * 10 + int(event.char)
-                    self.converter.exchange()
+                    self.converter.exchange(reverse)
                     if (self.converter.value_to * 100) % 100 == 0:
                         self.converter.value_to = int(self.converter.value_to)
 
             elif event.char == '.':
                 self.converter.value_from = float(self.converter.value_from)
-                self.converter.exchange()
+                self.converter.exchange(reverse)
                 if (self.converter.value_to * 100) % 100 == 0:
                     self.converter.value_to = int(self.converter.value_to)
 
@@ -104,18 +108,18 @@ class Window:
                 if '.' in self.components[index_from].get(1.0,tkr.END):
                     if self.numbers_after_dot == 0:
                         self.converter.value_from = int(self.converter.value_from)
-                        self.converter.exchange()
+                        self.converter.exchange(reverse)
                         if (self.converter.value_to * 100) % 100 == 0:
                             self.converter.value_to = int(self.converter.value_to)
                     else:
                         self.numbers_after_dot = self.numbers_after_dot - 1
                         self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
-                        self.converter.exchange()
+                        self.converter.exchange(reverse)
                         if (self.converter.value_to * 100) % 100 == 0:
                             self.converter.value_to = int(self.converter.value_to)
                 else:
                     self.converter.value_from = int((self.converter.value_from) / 10)
-                    self.converter.exchange()
+                    self.converter.exchange(reverse)
                     if (self.converter.value_to * 100) % 100 == 0:
                         self.converter.value_to = int(self.converter.value_to)
 
@@ -129,13 +133,21 @@ class Window:
 
     def set_contents(self):
 
-        self.components[0].bind( '<Key>', lambda event: self.text_edit(event, 0, 1) )
-        self.components[1].bind( '<Key>', lambda event: self.text_edit(event, 1, 0) )
+        #Logic
+        self.components[0].bind( '<Key>', lambda event: self.text_edit(event, 0) )
+        self.components[1].bind( '<Key>', lambda event: self.text_edit(event, 1, True) )
         self.components[0].bind( '<KeyRelease>', lambda event: self.text_show(event, 0, 1) )
         self.components[1].bind( '<KeyRelease>', lambda event: self.text_show(event, 1, 0) )
 
-        self.components[0].grid(row=0,column=0)
-        self.components[1].grid(row=1,column=0)
+        self.components[2].config(text=self.converter.from_currency)
+        self.components[3].config(text=self.converter.to_currency)
+
+        #Positioning
+        self.components[0].grid(row=0,column=1)
+        self.components[1].grid(row=1,column=1)
+
+        self.components[2].grid(row=0,column=0)
+        self.components[3].grid(row=1,column=0)
 
     def show_window(self):
         self.master.mainloop()

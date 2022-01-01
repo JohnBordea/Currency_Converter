@@ -1,4 +1,4 @@
-import tkinter as tk
+"""import tkinter as tk
 from tkinter import ttk
   
 # Creating tkinter window
@@ -10,7 +10,7 @@ ttk.Label(window, text = "Select the Month :",
         row = 15, padx = 10, pady = 25)
   
 n = tk.StringVar()
-monthchoosen = ttk.Combobox(window, width = 27, 
+monthchoosen = ttk.Combobox(window, width = 27, state="readonly",
                             textvariable = n)
   
 # Adding combobox drop down list
@@ -26,24 +26,20 @@ monthchoosen['values'] = (' January',
                           ' October', 
                           ' November', 
                           ' December')
-  
+
 monthchoosen.grid(column = 1, row = 15)
-  
+
+def modified (event) :
+    print(monthchoosen.get())
+
+monthchoosen.bind('<<ComboboxSelected>>', modified)
 # Shows february as a default value
 monthchoosen.current(0) 
-window.mainloop()
+window.mainloop()"""
 
-"""from tools.visual_manager import Window
+from tools.visual_manager import Window
 
 window = Window()
 window.set_contents()
 window.show_window()
 
-d = "10.001"
-f = float(d)
-i = int(f)
-
-print(len(d) - d.index('.') - 1)
-
-print(i + 1)
-"""
