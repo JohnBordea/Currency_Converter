@@ -6,6 +6,8 @@ class Converter:
     url = 'https://www.bnr.ro/nbrfxrates.xml'
     from_currency = ''
     to_currency = ''
+    value_from = 0
+    value_to = 0
 
     def __init__(self):
         try:
@@ -56,11 +58,17 @@ class Converter:
         if index in list(self.exchange_rate.keys()) and not self.from_currency == index and not self.to_currency == index:
             self.to_currency = index
 
-    def exchange(self, amount_of_money: float, reverse=False) -> float:
+    """def exchange(self, amount_of_money: float, reverse=False) -> float:
         if not reverse:
             return round( (self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency]) * amount_of_money , 4)
         else:
-            return round( (self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency]) * amount_of_money , 4)
+            return round( (self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency]) * amount_of_money , 4)"""
+
+    def exchange(self, reverse=False):
+        if not reverse:
+            self.value_to = round( (self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency]) * self.value_from , 2)
+        else:
+            self.value_from = round( (self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency]) * self.value_to , 2)
 
     def __str__(self) -> str:
         st = '{\n'

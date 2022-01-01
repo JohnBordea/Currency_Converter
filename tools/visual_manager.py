@@ -6,7 +6,13 @@ class Window:
     master = None
     converter = None
     components = []
-    interaction_at = None
+
+    can_be_typed = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+
+    interaction_at = 0
+    changed_widget = False
+
+    numbers_after_dot = 0
 
     def __init__(self):
         self.master = tkr.Tk()
@@ -15,24 +21,121 @@ class Window:
         self.converter = Converter()
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
-        f = tkr.Text(self.master, height=1, width=25, bg='light cyan')
-        #f.delete()
-        #self.components.append( tkr.Label(text="") )
 
-    def text_edited(self, event, index_from, index_to):
-        self.components[index_to].delete(1.0, 'end')
-        self.components[index_to].insert(1.0, self.components[index_from].get(1.0,tkr.END))
+        self.components[0].insert(1.0, self.converter.value_from)
+        self.components[1].insert(1.0, self.converter.value_to)
+
+    def text_widget_possible_length(self, st: str) -> int:
+        if '.' in st:
+            return 15
+        return 12
+
+    def text_edit(self, event, index_from, index_to):
+        if event.keysym.lower() == 'escape':
+            self.converter.value_from = 0
+            self.converter.value_to = 0
+            return "break"
+
         if index_from != self.interaction_at:
-            self.interaction_at = 0
-        #print(self.components[0])
+            self.interaction_at = index_from
+            self.converter.value_from, self.converter.value_to = self.converter.value_to, self.converter.value_from
+            self.changed_widget = True
+
+        if self.changed_widget == True:
+            if event.char in self.can_be_typed:
+                self.converter.value_from = int(event.char)
+                self.converter.exchange()
+                if (self.converter.value_to * 100) % 100 == 0:
+                    self.converter.value_to = int(self.converter.value_to)
+                self.changed_widget = False
+            elif event.char == '.':
+                self.converter.value_from = 0.0
+                self.converter.exchange()
+                self.changed_widget = False
+            elif event.keysym.lower() == 'backspace':
+                self.converter.value_from = 0
+                self.converter.value_to = 0
+        else:
+            if len( self.components[index_from].get(1.0,tkr.END) ) > self.text_widget_possible_length( self.components[index_from].get(1.0,tkr.END) ) or self.numbers_after_dot == 2:
+                if event.char == '.':
+                    self.converter.value_from = float(self.converter.value_from)
+                    self.converter.exchange()
+                    if (self.converter.value_to * 100) % 100 == 0:
+                        self.converter.value_to = int(self.converter.value_to)
+                elif event.keysym.lower() == 'backspace':
+                    if '.' in self.components[index_from].get(1.0,tkr.END):
+                        if self.numbers_after_dot == 0:
+                            self.converter.value_from = int(self.converter.value_from)
+                            self.converter.exchange()
+                            if (self.converter.value_to * 100) % 100 == 0:
+                                self.converter.value_to = int(self.converter.value_to)
+                        else:
+                            self.numbers_after_dot = self.numbers_after_dot - 1
+                            self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
+                            self.converter.exchange()
+                            if (self.converter.value_to * 100) % 100 == 0:
+                                self.converter.value_to = int(self.converter.value_to)
+                    else:
+                        self.converter.value_from = int((self.converter.value_from) / 10)
+                        self.converter.exchange()
+                        if (self.converter.value_to * 100) % 100 == 0:
+                            self.converter.value_to = int(self.converter.value_to)
+
+            elif event.char in self.can_be_typed:
+                if '.' in self.components[index_from].get(1.0,tkr.END) and self.numbers_after_dot < 2:
+                    self.numbers_after_dot = self.numbers_after_dot + 1
+                    self.converter.value_from = round(self.converter.value_from + (int(event.char) / (10 ** self.numbers_after_dot)) , 2)
+                    self.converter.exchange()
+                    if (self.converter.value_to * 100) % 100 == 0:
+                        self.converter.value_to = int(self.converter.value_to)
+                else:
+                    self.converter.value_from = self.converter.value_from * 10 + int(event.char)
+                    self.converter.exchange()
+                    if (self.converter.value_to * 100) % 100 == 0:
+                        self.converter.value_to = int(self.converter.value_to)
+
+            elif event.char == '.':
+                self.converter.value_from = float(self.converter.value_from)
+                self.converter.exchange()
+                if (self.converter.value_to * 100) % 100 == 0:
+                    self.converter.value_to = int(self.converter.value_to)
+
+            elif event.keysym.lower() == 'backspace':
+                if '.' in self.components[index_from].get(1.0,tkr.END):
+                    if self.numbers_after_dot == 0:
+                        self.converter.value_from = int(self.converter.value_from)
+                        self.converter.exchange()
+                        if (self.converter.value_to * 100) % 100 == 0:
+                            self.converter.value_to = int(self.converter.value_to)
+                    else:
+                        self.numbers_after_dot = self.numbers_after_dot - 1
+                        self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
+                        self.converter.exchange()
+                        if (self.converter.value_to * 100) % 100 == 0:
+                            self.converter.value_to = int(self.converter.value_to)
+                else:
+                    self.converter.value_from = int((self.converter.value_from) / 10)
+                    self.converter.exchange()
+                    if (self.converter.value_to * 100) % 100 == 0:
+                        self.converter.value_to = int(self.converter.value_to)
+
+        return "break"
+
+    def text_show(self, event, index_from, index_to):
+        self.components[index_from].delete(1.0, 'end')
+        self.components[index_to].delete(1.0, 'end')
+        self.components[index_from].insert(1.0, self.converter.value_from)
+        self.components[index_to].insert(1.0, self.converter.value_to)
 
     def set_contents(self):
 
-        self.components[0].bind( '<KeyRelease>', lambda event: self.text_edited_upper(event, 0, 1) )
+        self.components[0].bind( '<Key>', lambda event: self.text_edit(event, 0, 1) )
+        self.components[1].bind( '<Key>', lambda event: self.text_edit(event, 1, 0) )
+        self.components[0].bind( '<KeyRelease>', lambda event: self.text_show(event, 0, 1) )
+        self.components[1].bind( '<KeyRelease>', lambda event: self.text_show(event, 1, 0) )
 
         self.components[0].grid(row=0,column=0)
         self.components[1].grid(row=1,column=0)
-        return self
 
     def show_window(self):
         self.master.mainloop()
