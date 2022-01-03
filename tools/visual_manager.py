@@ -37,6 +37,7 @@ class Window:
         self.components[2]['values'] = list(self.converter.curency_name)
         self.components[2].current(0)
         self.components[3]['values'] = list(self.converter.curency_name)
+        
         self.components[3].current(28)
 
     def text_widget_possible_length(self, st: str) -> int:
