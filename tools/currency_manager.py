@@ -63,7 +63,6 @@ class Converter:
 
         f.close()
         self.curency_name = dict(currency)
-        #print(self.exchange_rate)
 
     def change_from(self, index: str):
         if index in list(self.exchange_rate.keys()):
@@ -73,21 +72,16 @@ class Converter:
         if index in list(self.exchange_rate.keys()):
             self.to_currency = index
 
-    """
-    def exchange(self, amount_of_money: float, reverse=False) -> float:
-        if not reverse:
-            return round( (self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency]) * amount_of_money , 4)
-        else:
-            return round( (self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency]) * amount_of_money , 4)
-    """
-
     def exchange(self, reverse=False):
-        if not reverse:
+        if reverse:
             self.value_to = round( round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4) * self.value_from , 4)
         else:
             self.value_to = round( round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4) * self.value_from , 4)
         if (self.value_to * (10 ** 4)) % (10 ** 4) == 0:
             self.value_to = int(self.value_to)
+
+    def get_base_exchange_value(self):
+        return ( round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4), round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4) )
 
     def __str__(self) -> str:
         st = '{\n'
