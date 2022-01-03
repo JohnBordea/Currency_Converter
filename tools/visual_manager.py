@@ -1,6 +1,10 @@
 from typing import Text
 from tools.currency_manager import Converter
 import tkinter as tkr
+from tkinter import ttk
+import tkinter.font as tkFont
+
+#tkFont.Font(family="Times New Roman", size=12, weight="normal")
 
 class Window:
     master = None
@@ -23,15 +27,21 @@ class Window:
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
         self.components.append( tkr.Text(self.master, height=1, width=25, bg='light cyan', bd=0) )
 
-        self.components.append( tkr.Label(self.master, text = "") )
-        self.components.append( tkr.Label(self.master, text = "") )
+        self.components.append( ttk.Combobox(self.master, width = 27, state="readonly", textvariable = tkr.StringVar()) )
+        self.components.append( ttk.Combobox(self.master, width = 27, state="readonly", textvariable = tkr.StringVar()) )
+
+        self.components.append( tkr.Label(self.master, text='') )
 
         self.components[0].insert(1.0, self.converter.value_from)
         self.components[1].insert(1.0, self.converter.value_to)
+        self.components[2]['values'] = list(self.converter.curency_name)
+        self.components[2].current(0)
+        self.components[3]['values'] = list(self.converter.curency_name)
+        self.components[3].current(28)
 
     def text_widget_possible_length(self, st: str) -> int:
         if '.' in st:
-            return 15
+            return 17
         return 12
 
     def text_edit(self, event, index_from, reverse=False):
@@ -60,7 +70,7 @@ class Window:
                 self.converter.value_from = 0
                 self.converter.value_to = 0
         else:
-            if len( self.components[index_from].get(1.0,tkr.END) ) > self.text_widget_possible_length( self.components[index_from].get(1.0,tkr.END) ) or self.numbers_after_dot == 2:
+            if len( self.components[index_from].get(1.0,tkr.END) ) > self.text_widget_possible_length( self.components[index_from].get(1.0,tkr.END) ) or self.numbers_after_dot == 4:
                 if event.char == '.':
                     self.converter.value_from = float(self.converter.value_from)
                     self.converter.exchange(reverse)
@@ -86,7 +96,7 @@ class Window:
                             self.converter.value_to = int(self.converter.value_to)
 
             elif event.char in self.can_be_typed:
-                if '.' in self.components[index_from].get(1.0,tkr.END) and self.numbers_after_dot < 2:
+                if '.' in self.components[index_from].get(1.0,tkr.END) and self.numbers_after_dot < 4:
                     self.numbers_after_dot = self.numbers_after_dot + 1
                     self.converter.value_from = round(self.converter.value_from + (int(event.char) / (10 ** self.numbers_after_dot)) , 2)
                     self.converter.exchange(reverse)
@@ -129,7 +139,28 @@ class Window:
         self.components[index_from].delete(1.0, 'end')
         self.components[index_to].delete(1.0, 'end')
         self.components[index_from].insert(1.0, self.converter.value_from)
+        self.components[index_from].configure(font = ("Times New Roman", 12, "bold"))
         self.components[index_to].insert(1.0, self.converter.value_to)
+        self.components[index_to].configure(font = ("Times New Roman", 12, "normal"))
+
+    def change_currency(self, event, index_from, index_to):
+
+        if index_from == 0:
+            self.converter.change_from( self.converter.curency_name[ self.components[2 + index_from].get() ] )
+        else:
+            self.converter.change_to( self.converter.curency_name[ self.components[2 + index_from].get() ] )
+
+        self.converter.exchange(not self.interaction_at == 0)
+        if (self.converter.value_to * 100) % 100 == 0:
+            self.converter.value_to = int(self.converter.value_to)
+
+        self.components[0].delete(1.0, 'end')
+        self.components[1].delete(1.0, 'end')
+
+        self.components[0 if self.interaction_at == 0 else 1].insert(1.0, self.converter.value_from)
+        self.components[1 if self.interaction_at == 0 else 0].insert(1.0, self.converter.value_to)
+
+        self.components[4].config(text=f"{self.converter.from_currency} - {self.converter.to_currency}")
 
     def set_contents(self):
 
@@ -139,15 +170,26 @@ class Window:
         self.components[0].bind( '<KeyRelease>', lambda event: self.text_show(event, 0, 1) )
         self.components[1].bind( '<KeyRelease>', lambda event: self.text_show(event, 1, 0) )
 
-        self.components[2].config(text=self.converter.from_currency)
-        self.components[3].config(text=self.converter.to_currency)
+        self.components[2].bind('<<ComboboxSelected>>', lambda event: self.change_currency(event, 0, 1) )
+        self.components[3].bind('<<ComboboxSelected>>', lambda event: self.change_currency(event, 1, 0) )
+
+        self.components[4].config(text=f"{self.converter.from_currency} - {self.converter.to_currency}")
+
+        #Style
+        self.components[0].configure(font = ("Times New Roman", 12, "normal"))
+        self.components[1].configure(font = ("Times New Roman", 12, "normal"))
+        self.components[2].configure(font = ("Times New Roman", 12, "normal"))
+        self.components[3].configure(font = ("Times New Roman", 12, "normal"))
+        self.components[4].configure(font = ("Times New Roman", 12, "normal"))
 
         #Positioning
-        self.components[0].grid(row=0,column=1)
-        self.components[1].grid(row=1,column=1)
+        self.components[0].grid(row=0, column=0)
+        self.components[1].grid(row=1, column=0)
 
-        self.components[2].grid(row=0,column=0)
-        self.components[3].grid(row=1,column=0)
+        self.components[2].grid(row=0, column=1)
+        self.components[3].grid(row=1, column=1)
+
+        self.components[4].grid(row=2, column=0, columnspan=2)
 
     def show_window(self):
         self.master.mainloop()
