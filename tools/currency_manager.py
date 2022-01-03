@@ -66,11 +66,11 @@ class Converter:
         #print(self.exchange_rate)
 
     def change_from(self, index: str):
-        if index in list(self.exchange_rate.keys()) and not self.from_currency == index and not self.to_currency == index:
+        if index in list(self.exchange_rate.keys()):
             self.from_currency = index
 
     def change_to(self, index: str):
-        if index in list(self.exchange_rate.keys()) and not self.from_currency == index and not self.to_currency == index:
+        if index in list(self.exchange_rate.keys()):
             self.to_currency = index
 
     """
