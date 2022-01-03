@@ -80,8 +80,11 @@ class Converter:
         if (self.value_to * (10 ** 4)) % (10 ** 4) == 0:
             self.value_to = int(self.value_to)
 
-    def get_base_exchange_value(self):
-        return ( round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4), round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4) )
+    def get_base_exchange_value(self, reverse=False):
+        if reverse:
+            return round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4)
+        else:
+            return round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4)
 
     def __str__(self) -> str:
         st = '{\n'
