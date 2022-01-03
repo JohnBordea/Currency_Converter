@@ -83,9 +83,11 @@ class Converter:
 
     def exchange(self, reverse=False):
         if not reverse:
-            self.value_to = round( round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4) * self.value_from , 2)
+            self.value_to = round( round(self.exchange_rate[self.to_currency] / self.exchange_rate[self.from_currency], 4) * self.value_from , 4)
         else:
-            self.value_to = round( round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4) * self.value_from , 2)
+            self.value_to = round( round(self.exchange_rate[self.from_currency] / self.exchange_rate[self.to_currency], 4) * self.value_from , 4)
+        if (self.value_to * (10 ** 4)) % (10 ** 4) == 0:
+            self.value_to = int(self.value_to)
 
     def __str__(self) -> str:
         st = '{\n'

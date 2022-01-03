@@ -59,8 +59,8 @@ class Window:
             if event.char in self.can_be_typed:
                 self.converter.value_from = int(event.char)
                 self.converter.exchange(reverse)
-                if (self.converter.value_to * 100) % 100 == 0:
-                    self.converter.value_to = int(self.converter.value_to)
+                #if (self.converter.value_to * 100) % 100 == 0:
+                #    self.converter.value_to = int(self.converter.value_to)
                 self.changed_widget = False
             elif event.char == '.':
                 self.converter.value_from = 0.0
@@ -74,64 +74,64 @@ class Window:
                 if event.char == '.':
                     self.converter.value_from = float(self.converter.value_from)
                     self.converter.exchange(reverse)
-                    if (self.converter.value_to * 100) % 100 == 0:
-                        self.converter.value_to = int(self.converter.value_to)
+                    #if (self.converter.value_to * 100) % 100 == 0:
+                    #    self.converter.value_to = int(self.converter.value_to)
                 elif event.keysym.lower() == 'backspace':
                     if '.' in self.components[index_from].get(1.0,tkr.END):
                         if self.numbers_after_dot == 0:
                             self.converter.value_from = int(self.converter.value_from)
                             self.converter.exchange(reverse)
-                            if (self.converter.value_to * 100) % 100 == 0:
-                                self.converter.value_to = int(self.converter.value_to)
+                            #if (self.converter.value_to * 100) % 100 == 0:
+                            #    self.converter.value_to = int(self.converter.value_to)
                         else:
                             self.numbers_after_dot = self.numbers_after_dot - 1
                             self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
                             self.converter.exchange(reverse)
-                            if (self.converter.value_to * 100) % 100 == 0:
-                                self.converter.value_to = int(self.converter.value_to)
+                            #if (self.converter.value_to * 100) % 100 == 0:
+                            #    self.converter.value_to = int(self.converter.value_to)
                     else:
                         self.converter.value_from = int((self.converter.value_from) / 10)
                         self.converter.exchange(reverse)
-                        if (self.converter.value_to * 100) % 100 == 0:
-                            self.converter.value_to = int(self.converter.value_to)
+                        #if (self.converter.value_to * 100) % 100 == 0:
+                        #    self.converter.value_to = int(self.converter.value_to)
 
             elif event.char in self.can_be_typed:
                 if '.' in self.components[index_from].get(1.0,tkr.END) and self.numbers_after_dot < 4:
                     self.numbers_after_dot = self.numbers_after_dot + 1
-                    self.converter.value_from = round(self.converter.value_from + (int(event.char) / (10 ** self.numbers_after_dot)) , 2)
+                    self.converter.value_from = round(self.converter.value_from + (int(event.char) / (10 ** self.numbers_after_dot)) , 4)
                     self.converter.exchange(reverse)
-                    if (self.converter.value_to * 100) % 100 == 0:
-                        self.converter.value_to = int(self.converter.value_to)
+                    #if (self.converter.value_to * 100) % 100 == 0:
+                    #    self.converter.value_to = int(self.converter.value_to)
                 else:
                     self.converter.value_from = self.converter.value_from * 10 + int(event.char)
                     self.converter.exchange(reverse)
-                    if (self.converter.value_to * 100) % 100 == 0:
-                        self.converter.value_to = int(self.converter.value_to)
+                    #if (self.converter.value_to * 100) % 100 == 0:
+                    #    self.converter.value_to = int(self.converter.value_to)
 
             elif event.char == '.':
                 self.converter.value_from = float(self.converter.value_from)
                 self.converter.exchange(reverse)
-                if (self.converter.value_to * 100) % 100 == 0:
-                    self.converter.value_to = int(self.converter.value_to)
+                #if (self.converter.value_to * 100) % 100 == 0:
+                #    self.converter.value_to = int(self.converter.value_to)
 
             elif event.keysym.lower() == 'backspace':
                 if '.' in self.components[index_from].get(1.0,tkr.END):
                     if self.numbers_after_dot == 0:
                         self.converter.value_from = int(self.converter.value_from)
                         self.converter.exchange(reverse)
-                        if (self.converter.value_to * 100) % 100 == 0:
-                            self.converter.value_to = int(self.converter.value_to)
+                        #if (self.converter.value_to * 100) % 100 == 0:
+                        #    self.converter.value_to = int(self.converter.value_to)
                     else:
                         self.numbers_after_dot = self.numbers_after_dot - 1
                         self.converter.value_from = int(self.converter.value_from * (10 ** self.numbers_after_dot)) / (10 ** self.numbers_after_dot)
                         self.converter.exchange(reverse)
-                        if (self.converter.value_to * 100) % 100 == 0:
-                            self.converter.value_to = int(self.converter.value_to)
+                        #if (self.converter.value_to * 100) % 100 == 0:
+                        #    self.converter.value_to = int(self.converter.value_to)
                 else:
                     self.converter.value_from = int((self.converter.value_from) / 10)
                     self.converter.exchange(reverse)
-                    if (self.converter.value_to * 100) % 100 == 0:
-                        self.converter.value_to = int(self.converter.value_to)
+                    #if (self.converter.value_to * 100) % 100 == 0:
+                    #    self.converter.value_to = int(self.converter.value_to)
 
         return "break"
 
@@ -151,8 +151,8 @@ class Window:
             self.converter.change_to( self.converter.curency_name[ self.components[2 + index_from].get() ] )
 
         self.converter.exchange(not self.interaction_at == 0)
-        if (self.converter.value_to * 100) % 100 == 0:
-            self.converter.value_to = int(self.converter.value_to)
+        #if (self.converter.value_to * 100) % 100 == 0:
+        #    self.converter.value_to = int(self.converter.value_to)
 
         self.components[0].delete(1.0, 'end')
         self.components[1].delete(1.0, 'end')
