@@ -31,6 +31,7 @@ class Window:
         self.components.append( ttk.Combobox(self.master, width = 27, state="readonly", textvariable = tkr.StringVar()) )
 
         self.components.append( tkr.Label(self.master, text='') )
+        self.components.append( tkr.Label(self.master, text='') )
 
         self.components[0].insert(1.0, self.converter.value_from)
         self.components[1].insert(1.0, self.converter.value_to)
@@ -160,7 +161,8 @@ class Window:
         self.components[0 if self.interaction_at == 0 else 1].insert(1.0, self.converter.value_from)
         self.components[1 if self.interaction_at == 0 else 0].insert(1.0, self.converter.value_to)
 
-        self.components[4].config(text=f"{self.converter.from_currency} - {self.converter.to_currency}")
+        self.components[4].config(text=f"1 {self.converter.from_currency} - {self.converter.get_base_exchange_value()} {self.converter.to_currency}")
+        self.components[5].config(text=f"1 {self.converter.to_currency} - {self.converter.get_base_exchange_value(True)} {self.converter.from_currency}")
 
     def set_contents(self):
 
@@ -173,7 +175,8 @@ class Window:
         self.components[2].bind('<<ComboboxSelected>>', lambda event: self.change_currency(event, 0, 1) )
         self.components[3].bind('<<ComboboxSelected>>', lambda event: self.change_currency(event, 1, 0) )
 
-        self.components[4].config(text=f"{self.converter.from_currency} - {self.converter.to_currency}")
+        self.components[4].config(text=f"1 {self.converter.from_currency} - {self.converter.get_base_exchange_value()} {self.converter.to_currency}")
+        self.components[5].config(text=f"1 {self.converter.to_currency} - {self.converter.get_base_exchange_value(True)} {self.converter.from_currency}")
 
         #Style
         self.components[0].configure(font = ("Times New Roman", 12, "normal"))
@@ -181,15 +184,17 @@ class Window:
         self.components[2].configure(font = ("Times New Roman", 12, "normal"))
         self.components[3].configure(font = ("Times New Roman", 12, "normal"))
         self.components[4].configure(font = ("Times New Roman", 12, "normal"))
+        self.components[5].configure(font = ("Times New Roman", 12, "normal"))
 
         #Positioning
-        self.components[0].grid(row=0, column=0)
-        self.components[1].grid(row=1, column=0)
+        self.components[0].grid(row=0, column=0, padx=(150, 10), pady=(75, 10))
+        self.components[1].grid(row=1, column=0, padx=(150, 10))
 
-        self.components[2].grid(row=0, column=1)
+        self.components[2].grid(row=0, column=1, pady=(75, 10))
         self.components[3].grid(row=1, column=1)
 
-        self.components[4].grid(row=2, column=0, columnspan=2)
+        self.components[4].grid(row=2, column=0, columnspan=2, padx=(150, 10))
+        self.components[5].grid(row=3, column=0, columnspan=2, padx=(150, 10))
 
     def show_window(self):
         self.master.mainloop()
