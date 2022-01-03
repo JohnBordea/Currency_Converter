@@ -34,9 +34,9 @@ class Window:
         self.components[0].insert(1.0, self.converter.value_from)
         self.components[1].insert(1.0, self.converter.value_to)
         self.components[2]['values'] = list(self.converter.curency_name)
-        self.components[2].current(0)
+        self.components[2].current(list(self.converter.curency_name.values()).index(self.converter.from_currency))
         self.components[3]['values'] = list(self.converter.curency_name)
-        self.components[3].current(28)
+        self.components[3].current(list(self.converter.curency_name.values()).index(self.converter.to_currency))
 
     def text_widget_possible_length(self, st: str) -> int:
         if '.' in st:

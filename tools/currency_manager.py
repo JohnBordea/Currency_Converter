@@ -11,6 +11,7 @@ class Converter:
     value_to = 0
 
     def __init__(self):
+
         try:
             response = requests.get(self.url)
             root = ET.ElementTree( ET.fromstring( response.content ) ).getroot()

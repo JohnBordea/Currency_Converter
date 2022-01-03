@@ -5,17 +5,8 @@ window = Window()
 window.set_contents()
 window.show_window()
 
-#c = Converter()
-#print(c.get_base_exchange_value())
+c = Converter()
+print(c.exchange_rate)
+print(c.curency_name)
 
-"""import tkinter as tk
-
-def change_color(dummy_e):
-    canvas.configure(bg='cyan')
-
-root = tk.Tk()
-canvas = tk.Canvas(root, bg='red')
-canvas.pack()
-canvas.bind('<1>', change_color)
-
-root.mainloop()"""
+print( list(c.curency_name.values()).index(c.to_currency) )
