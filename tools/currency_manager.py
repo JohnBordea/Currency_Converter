@@ -1,5 +1,6 @@
 import requests
 import xml.etree.ElementTree as ET
+import json
 
 class Converter:
     exchange_rate = None
@@ -28,42 +29,24 @@ class Converter:
         except (requests.ConnectionError, requests.Timeout) as exception:
             self.read_offline_exchange_rate()
 
-        self.from_currency = list(self.exchange_rate.keys())[0]
+        self.from_currency = list(self.exchange_rate.keys())[3]
         self.to_currency = list(self.exchange_rate.keys())[1]
 
         self.set_name_for_currency()
 
     def save_exchange_rate(self):
-        w = open("data/exchange_rate.info", "w")
-
-        for rate in self.exchange_rate:
-            w.write(f"{rate}={self.exchange_rate[rate]}")
-            if not rate == list( self.exchange_rate.keys() )[-1]:
-                w.write('\n')
-
-        w.close()
+        with open("data/exchange_rate.info", "w") as w:
+            w.write(json.dumps(self.exchange_rate))
 
     def read_offline_exchange_rate(self):
         f = open('data/exchange_rate.info', 'r')
-        currency = []
-        for text in f:
-            if not text == '':
-                element = text.split('=')
-                currency.append( (element[0], float(element[1]) ) )
-
+        self.exchange_rate = json.load(f)
         f.close()
-        self.exchange_rate = dict(currency)
 
     def set_name_for_currency(self):
         f = open('data/dictionary.info', mode='r', encoding="utf-8")
-        currency = []
-        for text in f:
-            if not text == '':
-                element = text.split('=')
-                currency.append( (element[1].strip('\n'), element[0] ) )
-
+        self.curency_name = json.load(f)
         f.close()
-        self.curency_name = dict(currency)
 
     def change_from(self, index: str):
         if index in list(self.exchange_rate.keys()):
