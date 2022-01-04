@@ -1,6 +1,8 @@
+from tkinter.constants import TRUE
 import requests
 import xml.etree.ElementTree as ET
 import json
+import datetime
 
 class Converter:
     exchange_rate = None
@@ -12,27 +14,44 @@ class Converter:
     value_to = 0
 
     def __init__(self):
-        #Preluarea Datelor din URL
-        try:
-            response = requests.get(self.url)
-            root = ET.ElementTree( ET.fromstring( response.content ) ).getroot()
+        self.read_offline_exchange_rate()
+        if self.needed_update():
+            try:
+                response = requests.get(self.url)
+                root = ET.ElementTree( ET.fromstring( response.content ) ).getroot()
 
-            currency = [ (root[1][1].text, 1) ]
-            for rate in root[1][2]:
-                if 'multiplier' in rate.attrib:
-                    currency.append( ( rate.attrib['currency'], (float(rate.text) / float(rate.attrib['multiplier'])) ) )
-                else:
-                    currency.append( ( rate.attrib['currency'], float(rate.text) ) )
-
-            self.exchange_rate = dict(currency)
-            self.save_exchange_rate()
-        except (requests.ConnectionError, requests.Timeout) as exception:
-            self.read_offline_exchange_rate()
+                currency = [ (root[1][1].text, 1) ]
+                for rate in root[1][2]:
+                    if 'multiplier' in rate.attrib:
+                        currency.append( ( rate.attrib['currency'], (float(rate.text) / float(rate.attrib['multiplier'])) ) )
+                    else:
+                        currency.append( ( rate.attrib['currency'], float(rate.text) ) )
+                currency.append( ('last_update', root[0][1].text) )
+                self.exchange_rate = dict(currency)
+                self.save_exchange_rate()
+            except (requests.ConnectionError, requests.Timeout) as exception:
+                self.read_offline_exchange_rate()
 
         self.from_currency = list(self.exchange_rate.keys())[3]
         self.to_currency = list(self.exchange_rate.keys())[1]
 
         self.set_name_for_currency()
+
+    def needed_update(self):
+        last_updated = datetime.datetime.strptime(self.exchange_rate['last_update'], '%Y-%m-%d')
+        current_time = datetime.datetime.now()
+
+        need_update = False
+        if current_time.year == last_updated.year and current_time.month == last_updated.month:
+            if current_time.day == (last_updated.day + 1):
+                if current_time.hour > 13:
+                    need_update = True
+            elif current_time.day > (last_updated.day + 1):
+                need_update = True
+        else:
+            need_update = True
+
+        return need_update
 
     def save_exchange_rate(self):
         with open("data/exchange_rate.info", "w") as w:
