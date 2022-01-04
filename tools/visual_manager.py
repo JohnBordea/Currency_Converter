@@ -153,7 +153,7 @@ class Window:
         self.components[4].config(text=f"1 {self.converter.from_currency} - {self.converter.get_base_exchange_value()} {self.converter.to_currency}")
         self.components[5].config(text=f"1 {self.converter.to_currency} - {self.converter.get_base_exchange_value(True)} {self.converter.from_currency}")
 
-        self.components[6].config(text="")
+        self.components[6].config(text=f"Actualizata de pe data de {self.converter.exchange_rate['last_update']}")
 
         #Style
         self.components[0].configure(font = ("Times New Roman", 12, "normal"))
